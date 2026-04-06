@@ -5,12 +5,14 @@ Option Compare Database
 ' ★ DB接続パスの一元管理
 ' 本番環境と開発環境を切り替える場合はここだけ変更する
 ' ================================================================
-#Const IS_TEST = True   ' True=テスト環境, False=本番環境
+#Const IS_TEST = True
 
 #If IS_TEST Then
-    Public Const DB_PATH As String = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260324T1250_reWrite_TableImport\bin\伺書起案企画書DB.mdb"
+    Public Const DB_PATH        As String = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260324T1250_reWrite_TableImport\bin\伺書起案企画書DB.mdb"
+    Public Const DB_SERVER_PATH As String = DB_PATH   ' テスト時はローカルと同じ
 #Else
-    Public Const DB_PATH As String = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
+    Public Const DB_PATH        As String = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
+    Public Const DB_SERVER_PATH As String = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
 #End If
 
 
@@ -43,6 +45,12 @@ Public flgOwari        As Integer
 Public flgHyouji       As Integer
 Public strQry          As String
 Public strTbl          As String
+
+' ── 既存の変数宣言に以下を追加 ──────────────────────────────────
+Public flgPwOk      As Integer   ' ★ 追加: 0=PW未認証, 1=中間管理PW認証済, 2=SYS管理PW認証済
+Public Const cstPwJimu  As String = "jimu1319s"
+Public Const cstPwSys   As String = "sys0120310272"
+Public strNextBangou   As String   ' 新規登録時の次番号（受付年度()から受け取る）
 
 'システム名
 Public Const cstSys = "伺い書、起案・企画書ＤＢシステム"
@@ -267,10 +275,18 @@ Public Sub GetTableDWH(strTbl As String)
     ' Serverから読み込む側の設定
     Dim cn_R As Object 'ADOコネクションオブジェクト
     Set cn_R = CreateObject("ADODB.Connection") 'ADOコネクションのオブジェクトを作成
-     'テスト環境
-'    strFd = "z:\DataBase\伺書起案企画書DB.mdb"
-'    本番環境
+     
+'新テストか本番か
+#If IS_TEST Then
+    strFd = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260324T1250_reWrite_TableImport\bin\伺書起案企画書DB.mdb"
+#Else
     strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
+#End If
+     
+     '旧テスト環境
+'    strFd = "Z:\伺書起案企画書DB.mdb"
+'    本番環境
+'    strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
     cn_R.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strFd
 
     ' ローカルAccessへ書き込む側の設定
@@ -389,3 +405,22 @@ ERR_SDET:
     Resume Exit_SDET
 End Sub
 
+' 戻るボタン・×ボタンから共通で呼び出す
+Public Sub 全ロック解放()
+    Dim intRtn As Integer
+
+    ' 1) 文書ロック（編集中レコードロック）を解放
+    '    職員番号で登録されているロックを全削除
+    Call TBLロック_INIT
+    TBLロック.職員番号 = 職員情報Key.職員番号
+    intRtn = ロック_DEL   ' Mdlロック.bas の既存関数
+
+    ' 2) ログインロックを解放
+    Call TBLログイン_INIT
+    TBLログイン.職員番号 = 職員情報Key.職員番号
+    intRtn = ログイン_DEL   ' Mdlログイン.bas の既存関数
+
+    ' 3) PW認証フラグをリセット
+    flgPwOk = 0
+
+End Sub

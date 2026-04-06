@@ -1,12 +1,12 @@
 Version =19
 VersionRequired =19
-Checksum =-2021494231
-
+CodeBehindForm
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
+Option Explicit
 
 ' ================================================================
 ' モジュールレベル変数
@@ -16,6 +16,8 @@ Dim strSyozoku   As String
 Dim strBangou    As String
 Public strTable  As String
 Private intSts   As Integer
+Private rs2      As ADODB.Recordset   ' ★ 追加（未宣言だった）
+Private strQuery As String            ' ★ 追加（未宣言だった）
 
 
 ' ================================================================
@@ -127,6 +129,9 @@ Private Sub cmd登録_Click()
 
     Dim dataArgs As String
 
+    ' ── ★ PW認証チェック ────────────────────────────────────────────
+    If Not PW認証チェック() Then Exit Sub
+
     strBangou = ""
     strNichiji = ""
     flgShinki = 1
@@ -139,11 +144,14 @@ End Sub
 
 
 ' ================================================================
-' 編集ボタン クリック
+' 編集ボタン：PW認証を通過した場合のみF新規修正を開く
 ' ================================================================
 Private Sub cmd編集_Click()
 
     Dim dataArgs As String
+
+    ' ── ★ PW認証チェック ────────────────────────────────────────────
+    If Not PW認証チェック() Then Exit Sub
 
     strBangou = Forms!Fメイン!情報Sub!txt番号
     strNichiji = Forms!Fメイン!情報Sub!登録日時
@@ -170,15 +178,12 @@ End Sub
 
 
 ' ================================================================
-' 戻るボタン クリック
+' 戻るボタン：文書ロック＋ログインロックを解放してメニューへ
 ' ================================================================
 Private Sub cmd戻る_Click()
 
-    Dim intRtn As Integer
-
-    TBLログイン_INIT
-    TBLログイン.職員番号 = 職員情報Key.職員番号
-    intRtn = ログイン_DEL
+    ' ★ 両ロック解放（共通ルーティン）
+    Call 全ロック解放
 
     strShisetuEx = ""
     strSyozokuEx = ""
@@ -613,6 +618,77 @@ Function 所属_SEL2() As String
             所属_SEL2 = strBase & " AND 施設 = '" & Me.cbo施設検索 & "'"
         Else
             所属_SEL2 = strBase & " WHERE 施設 = '" & Me.cbo施設検索 & "'"
+        End If
+    End If
+
+End Function
+
+' ================================================================
+' ★ 新規追加：×ボタンでフォームを閉じたとき両ロック解放
+' ================================================================
+Private Sub Form_Unload(Cancel As Integer)
+    Call 全ロック解放
+End Sub
+
+' ================================================================
+' ★ 新規追加：PW認証チェック関数
+'
+' 役割：
+'   - flgPwOk が既に認証済みなら即 True を返す（セッション中は再入力不要）
+'   - 所属部門に応じたパスワードを確認し、成功なら flgPwOk を更新して True
+'   - 失敗 or キャンセルなら False
+'
+' 呼び出し元：cmd登録_Click、cmd編集_Click
+' ================================================================
+Private Function PW認証チェック() As Boolean
+
+    PW認証チェック = False
+
+    Dim strBumon As String
+    strBumon = Trim$(職員情報Key.所属部門)
+
+    ' 所属部門が "3" 以下（一般職員）は編集権限なし
+    If strBumon <= "3" Then
+        MsgBox "編集・登録権限がありません。", vbExclamation, cstSys
+        Exit Function
+    End If
+
+    ' ── すでにこのセッションで認証済みならスキップ ──────────────────
+    '   flgPwOk >= 1 かつ 所属部門レベルに合致していれば認証不要
+    If strBumon >= "6" Then
+        If flgPwOk >= 2 Then
+            PW認証チェック = True
+            Exit Function
+        End If
+    ElseIf strBumon >= "4" Then
+        If flgPwOk >= 1 Then
+            PW認証チェック = True
+            Exit Function
+        End If
+    End If
+
+    ' ── パスワード入力 ───────────────────────────────────────────────
+    Dim strInput As String
+    strInput = InputBoxDK("編集・登録パスワードを入力してください", "認証")
+
+    If strBumon >= "6" Then
+        ' システム管理者パスワード
+        If strInput = cstPwSys Then
+            flgPwOk = 2
+            flgHyouji = 2
+            flgSYS = 1
+            PW認証チェック = True
+        Else
+            MsgBox cstMsg05, vbExclamation, cstSys
+        End If
+    ElseIf strBumon >= "4" Then
+        ' 中間管理者パスワード
+        If strInput = cstPwJimu Then
+            flgPwOk = 1
+            flgHyouji = 1
+            PW認証チェック = True
+        Else
+            MsgBox cstMsg05, vbExclamation, cstSys
         End If
     End If
 

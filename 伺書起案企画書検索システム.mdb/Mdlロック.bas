@@ -164,3 +164,30 @@ On Error GoTo ロック_INS_ERR
     GoTo ロック_INS_EXIT
 
 End Function
+
+' ── Mdlロック.bas に追加 ──
+' 伺企番号キーでロックを削除する（職員番号問わず）
+Function ロック_DEL_BY_KEY(strKey As String) As Integer
+
+On Error GoTo ロック_DEL_BY_KEY_ERR
+
+    ロック_DEL_BY_KEY = RTN_ERR
+
+    Dim intS As Integer
+    Call CN_INIT(intS)
+    If intS <> DB_OK Then Exit Function
+
+    strSQL = "DELETE FROM Tロック伺企 WHERE 伺企番号 = '" & strKey & "'"
+    Call CN_EXEC(intS)
+    If intS = DB_OK Then ロック_DEL_BY_KEY = RTN_OK
+
+ロック_DEL_BY_KEY_EXIT:
+    Call CN_END
+    Exit Function
+
+ロック_DEL_BY_KEY_ERR:
+    MsgBox Err.Number & ":" & Err.Description, vbExclamation, "ロック削除(KEY)エラー"
+    GoTo ロック_DEL_BY_KEY_EXIT
+
+End Function
+
