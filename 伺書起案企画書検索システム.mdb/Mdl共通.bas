@@ -8,7 +8,7 @@ Option Compare Database
 #Const IS_TEST = True   ' True=テスト環境, False=本番環境
 
 #If IS_TEST Then
-    Public Const DB_PATH As String = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260319T1436_ExportFirst\bin\伺書起案企画書DB.mdb"
+    Public Const DB_PATH As String = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260324T1250_reWrite_TableImport\bin\伺書起案企画書DB.mdb"
 #Else
     Public Const DB_PATH As String = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
 #End If
