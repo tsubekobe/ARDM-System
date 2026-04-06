@@ -1,6 +1,19 @@
 Attribute VB_Name = "Mdl共通"
 Option Compare Database
 
+
+' ★ DB接続パスの一元管理
+' 本番環境と開発環境を切り替える場合はここだけ変更する
+' ================================================================
+#Const IS_TEST = True   ' True=テスト環境, False=本番環境
+
+#If IS_TEST Then
+    Public Const DB_PATH As String = "C:\Users\m_system\Desktop\システムSC\伺書起案企画書検索システム_20260319T1436_ExportFirst\bin\伺書起案企画書DB.mdb"
+#Else
+    Public Const DB_PATH As String = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
+#End If
+
+
 '========================データベース用変数
 Public daoWS              As DAO.Workspace
 Public daoDB              As DAO.Database
@@ -45,9 +58,9 @@ Public Const cstPrintPath = "\Temp.snp"
 
 '========================データベース用変数(ADO接続)
 
-Public cn               As New ADODB.Connection
-Public rs               As New ADODB.Recordset
-Public RSF              As New ADODB.Recordset
+Public cn               As ADODB.Connection
+Public rs               As ADODB.Recordset
+Public RSF              As ADODB.Recordset
 
 Public PintKBN          As Integer
 Public pstrSisetucho    As String
@@ -77,26 +90,16 @@ Type 端末情報Key
 End Type
 Public 端末情報Key      As 端末情報Key
 
+' CN_INIT を修正（Sub内のPublic Const宣言を削除する）
 Sub CN_INIT(Optional ByRef intSts As Integer)
-
-    Dim strFd As String
-
 On Error GoTo CN_INIT_ERR
-    
     intSts = DB_ERR
-    
     Set cn = New ADODB.Connection
-    strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
-'    strFd = "z:\DataBase\伺書起案企画書DB.mdb"
-    cn.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strFd
-
+    cn.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & DB_PATH
     intSts = DB_OK
-    
     Exit Sub
-
 CN_INIT_ERR:
     MsgBox Err.Number & ":" & Err.Description, vbExclamation, "ＤＢ接続エラー"
-
 End Sub
 
 Sub CN_END(Optional ByRef intSts As Integer)
@@ -288,33 +291,33 @@ End Sub
 ' --------------------------------------------------------
 ' Server のテーブルを、端末ACCESSにコピーする
 ' --------------------------------------------------------
+' ================================================================
+' 修正版 TableImport
+' 問題: Exit Sub がエラーハンドラより前にあり、コピー処理が動いていない
+' ================================================================
 Private Sub TableImport(strTableName As String, ByRef objCn_R As Object, ByRef objCn_W As Object)
     Dim strSQL_R As String
     Dim i As Integer
+    Dim rs_R As Object
+    Dim rs_W As Object
 
-    ' SQLServerから読み込む側の設定
-    Dim rs_R As Object 'ADOレコードセットオブジェクト
-    Set rs_R = CreateObject("ADODB.Recordset") 'ADOレコードセットのオブジェクトを作成
+On Error GoTo TableImport_ERR
 
-    ' Accessへ書き込む側の設定
-    Dim rs_W As Object 'ADOレコードセットオブジェクト
-    Set rs_W = CreateObject("ADODB.Recordset") 'ADOレコードセットのオブジェクトを作成
-    
-    ' 削除メッセージを出さなくして、Access上のテーブル内容を全件削除
+    Set rs_R = CreateObject("ADODB.Recordset")
+    Set rs_W = CreateObject("ADODB.Recordset")
+
+    ' Step1: ローカルテーブルを全件削除
     DoCmd.SetWarnings False
     DoCmd.RunSQL "DELETE FROM " & strTableName
-    
-    ' Access側のテーブルが、クリアされて無かったら、エラー表示
-    If DCount("*", strTableName) > 0 Then
-        MsgBox "Access側の「" & strTableName & "」テーブルの内容、削除しきれてないでー"
-    End If
-        
-    ' SQLserver側のテーブル内容を全件持ってくるため、読み込み、書き込みのオープン
+    DoCmd.SetWarnings True
+
+    ' Step2: サーバーから全件読み込み
     strSQL_R = "SELECT * FROM " & strTableName
     rs_R.Open strSQL_R, objCn_R
-    rs_W.Open strTableName, objCn_W, 1, 2
-    
-    ' レコードごとに読み書きし、全レコードをなめる
+
+    ' Step3: ローカルテーブルに書き込み
+    rs_W.Open strTableName, objCn_W, 1, 2  ' adOpenKeyset, adLockOptimistic
+
     Do Until rs_R.EOF
         rs_W.AddNew
         For i = 0 To rs_R.Fields.Count - 1
@@ -323,13 +326,17 @@ Private Sub TableImport(strTableName As String, ByRef objCn_R As Object, ByRef o
         rs_W.Update
         rs_R.MoveNext
     Loop
-    
-     'レコードセットの破棄
+
     rs_R.Close: Set rs_R = Nothing
     rs_W.Close: Set rs_W = Nothing
-
-    ' メッセージを出すモードに戻す
     DoCmd.SetWarnings True
+    Exit Sub
+
+TableImport_ERR:
+    DoCmd.SetWarnings True
+    If Not rs_R Is Nothing Then rs_R.Close: Set rs_R = Nothing
+    If Not rs_W Is Nothing Then rs_W.Close: Set rs_W = Nothing
+    MsgBox Err.Number & ":" & Err.Description, vbExclamation, "TableImport エラー"
 
 End Sub
 

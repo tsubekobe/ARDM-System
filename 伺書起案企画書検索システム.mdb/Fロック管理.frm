@@ -1,6 +1,6 @@
 Version =19
 VersionRequired =19
-Checksum =-2021494231
+Checksum =-2021494615
 Begin Form
     AutoResize = NotDefault
     PopUp = NotDefault
@@ -24,10 +24,11 @@ Begin Form
     Width =13041
     DatasheetFontHeight =11
     ItemSuffix =69
-    Left =7140
-    Top =5790
-    Right =19980
-    Bottom =14115
+    Left =7170
+    Top =5460
+    Right =20010
+    Bottom =13785
+    DatasheetGridlinesColor =15062992
     RecSrcDt = Begin
         0x45d4ba39322be640
     End
@@ -36,14 +37,14 @@ Begin Form
     End
     NameMap = Begin
         0x0acc0e5500000000ff37d9f703910a40bd4157716504562c0000000004215970 ,
-        0x2d2be640806b7003f461ef005400ed30c330af303a4f014f0000000000008360 ,
+        0x2d2be64000000000000000005400ed30c330af303a4f014f0000000000008360 ,
         0x73f9a7e488428a8d51803507b9ab07000000ff37d9f703910a40bd4157716504 ,
         0x562c3a4f014f6a75f7530000000000000edcdf73fd77a84989a05ff9b04e6eae ,
         0x07000000ff37d9f703910a40bd4157716504562c7780e1540f6c0d5400000000 ,
         0x0000ef2bac08fb36bb4ea17a5c07c5f954f307000000ff37d9f703910a40bd41 ,
         0x57716504562ce6510674ef7a2b67000000000000713960ff70ceae4397575960 ,
         0x0ec67c5307000000ff37d9f703910a40bd4157716504562ce6510674e5654266 ,
-        0x000000000000000000000000000000000000000000000c000000040000000000 ,
+        0x000000000000000000000000000000000000000000000c000000050000000000 ,
         0x000000000000000000000000
     End
     RecordSource ="SELECT Tロック伺企.伺企番号, Tロック伺企.職員氏名, Tロック伺企.処理端末, Tロック伺企.処理日時 FROM Tロック伺企; "
@@ -53,10 +54,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0001940168fe93017cebce7288fd9301b4fd9301b4fd9301000000006530d272 ,
         0x010403069c00501403ff0000010009009a0b3408640001000700580201000100 ,
-        0x5802030001004134000000000000000000000000000000000000000000000000 ,
-        0x0000000000000000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb97997744fd93017cfd930180fd930100000000 ,
+        0xa0fd9301a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -225,7 +226,7 @@ Begin Form
     PrtDevNames = Begin
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
-        0x00000000000000000000545330303100
+        0x000000000000000000005453303031000000000000000000
     End
     OnLoad ="[Event Procedure]"
     NoSaveCTIWhenDisabled =1
@@ -239,6 +240,7 @@ Begin Form
         Begin Rectangle
             SpecialEffect =3
             BackStyle =0
+            BorderLineStyle =0
             Width =850
             Height =850
         End
@@ -253,12 +255,14 @@ Begin Form
         End
         Begin CheckBox
             SpecialEffect =2
+            BorderLineStyle =0
             LabelX =230
             LabelY =-30
         End
         Begin TextBox
             FELineBreak = NotDefault
             TextFontCharSet =128
+            BorderLineStyle =0
             Width =1701
             Height =270
             LabelX =-1701
@@ -268,6 +272,7 @@ Begin Form
         End
         Begin ComboBox
             TextFontCharSet =128
+            BorderLineStyle =0
             Width =1701
             Height =270
             LabelX =-1701
@@ -276,6 +281,7 @@ Begin Form
             FontName ="ＭＳ Ｐゴシック"
         End
         Begin Subform
+            BorderLineStyle =0
             Width =1701
             Height =1701
             BorderColor =12632256
@@ -314,9 +320,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     TextFontFamily =49
-                    Left =1671
+                    Left =1665
                     Top =840
-                    Width =2622
+                    Width =2625
                     Height =270
                     Name ="lbl職員氏名"
                     Caption ="端末番号"
@@ -344,9 +350,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     TextFontFamily =49
-                    Left =4353
+                    Left =4350
                     Top =840
-                    Width =3696
+                    Width =3690
                     Height =270
                     Name ="lbl処理日時"
                     Caption ="処理日時"
@@ -388,9 +394,9 @@ Begin Form
                     TextFontFamily =49
                     IMEMode =1
                     BackStyle =0
-                    Left =1671
+                    Left =1665
                     Top =60
-                    Width =2622
+                    Width =2625
                     ColumnWidth =1620
                     FontWeight =700
                     TabIndex =1
@@ -433,9 +439,9 @@ Begin Form
                     TextFontFamily =49
                     IMEMode =2
                     BackStyle =0
-                    Left =4353
+                    Left =4350
                     Top =60
-                    Width =3696
+                    Width =3690
                     ColumnWidth =2535
                     FontWeight =700
                     TabIndex =2
@@ -518,34 +524,65 @@ Option Compare Database
 Option Explicit
 Private intSts      As Integer
 
+'Private Sub cmd削除_Click()
+'On Error GoTo Err_cmd削除_Click
+'    Call CN_INIT(intSts)
+'
+'    cn.BeginTrans
+'
+'    strSQL = ""
+'    strSQL = strSQL & "delete * from Tロック伺企 "
+'    strSQL = strSQL & "where 企画番号 = '" & txt企画番号 & "'"
+'
+'    cn.Execute strSQL
+'
+'    cn.CommitTrans
+'
+'    Call CN_END
+'
+'    Call データ削除("Tロック伺企", "企画番号", CStr(Me.txt企画番号))
+'
+'    Me.Requery
+'
+'Exit_cmd削除_Click:
+'    Exit Sub
+'
+'Err_cmd削除_Click:
+'    MsgBox Err.Description
+'    Resume Exit_cmd削除_Click
+'    cn.RollbackTrans
+'
+'End Sub
+' ================================================================
+' 修正版 cmd削除_Click（Fロック管理.frm）
+' 問題: WHERE句で "企画番号" を使っているが正しくは "伺企番号"
+' ================================================================
 Private Sub cmd削除_Click()
 On Error GoTo Err_cmd削除_Click
+
     Call CN_INIT(intSts)
-    
     cn.BeginTrans
-    
+
     strSQL = ""
-    strSQL = strSQL & "delete * from Tロック伺企 "
-    strSQL = strSQL & "where 企画番号 = '" & txt企画番号 & "'"
-    
+    strSQL = strSQL & "DELETE * FROM Tロック伺企 "
+    strSQL = strSQL & "WHERE 伺企番号 = '" & txt企画番号 & "'"  ' ← "企画番号" → "伺企番号" に修正
+
     cn.Execute strSQL
-
     cn.CommitTrans
-
     Call CN_END
-    
-    Call データ削除("Tロック伺企", "企画番号", CStr(Me.txt企画番号))
-    
+
+    ' ローカルテーブルからも削除
+    Call データ削除("Tロック伺企", "伺企番号", CStr(Me.txt企画番号))  ' ← フィールド名修正
+
     Me.Requery
-    
+
 Exit_cmd削除_Click:
     Exit Sub
 
 Err_cmd削除_Click:
+    If cn.State = 1 Then cn.RollbackTrans  ' ← ロールバックを追加
     MsgBox Err.Description
     Resume Exit_cmd削除_Click
-    cn.RollbackTrans
-
 End Sub
 
 Private Sub cmd戻る_Click()
