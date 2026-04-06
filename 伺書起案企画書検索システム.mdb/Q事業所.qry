@@ -1,0 +1,70 @@
+Operation =1
+Option =0
+Where ="(((Tコード管理.コードID)=2))"
+Begin InputTables
+    Name ="Tコード管理"
+End
+Begin OutputColumns
+    Expression ="Tコード管理.コード"
+    Expression ="Tコード管理.コード名称"
+    Expression ="Tコード管理.コード施設"
+End
+dbBoolean "ReturnsRecords" ="-1"
+dbInteger "ODBCTimeout" ="60"
+dbByte "RecordsetType" ="0"
+dbBoolean "OrderByOn" ="-1"
+dbByte "Orientation" ="0"
+dbByte "DefaultView" ="2"
+dbBoolean "FilterOnLoad" ="0"
+dbBoolean "OrderByOnLoad" ="-1"
+dbBoolean "TotalsRow" ="0"
+dbMemo "OrderBy" ="[Q事業所].[コード]"
+Begin
+    Begin
+        dbText "Name" ="Tコード管理.[コード]"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.[コード名称]"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.[コード施設]"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.コード"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.コード名称"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.コード施設"
+        dbLong "AggregateType" ="-1"
+    End
+End
+Begin
+    State =0
+    Left =-276
+    Top =39
+    Right =892
+    Bottom =855
+    Left =-1
+    Top =-1
+    Right =1136
+    Bottom =186
+    Left =0
+    Top =0
+    ColumnsShown =539
+    Begin
+        Left =48
+        Top =12
+        Right =192
+        Bottom =156
+        Top =0
+        Name ="Tコード管理"
+        Name =""
+    End
+End

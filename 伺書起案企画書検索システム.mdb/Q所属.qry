@@ -1,0 +1,27 @@
+dbMemo "SQL" ="SELECT Tコード管理.[コード], Tコード管理.[コード名称], Tコード管理.[コード施設]\015\012FROM Tコード管理\015\012WH"
+    "ERE (((Tコード管理.コードID)=2));\015\012"
+dbMemo "Connect" =""
+dbBoolean "ReturnsRecords" ="-1"
+dbInteger "ODBCTimeout" ="60"
+dbByte "RecordsetType" ="0"
+dbBoolean "OrderByOn" ="-1"
+dbByte "Orientation" ="0"
+dbByte "DefaultView" ="2"
+dbBoolean "FilterOnLoad" ="0"
+dbBoolean "OrderByOnLoad" ="-1"
+dbBoolean "TotalsRow" ="0"
+dbMemo "OrderBy" ="[Q所属].[コード]"
+Begin
+    Begin
+        dbText "Name" ="Tコード管理.[コード]"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.[コード名称]"
+        dbLong "AggregateType" ="-1"
+    End
+    Begin
+        dbText "Name" ="Tコード管理.[コード施設]"
+        dbLong "AggregateType" ="-1"
+    End
+End

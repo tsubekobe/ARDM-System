@@ -1,0 +1,53 @@
+Operation =1
+Option =0
+Begin InputTables
+    Name ="T伺い書基本情報"
+End
+Begin OutputColumns
+    Expression ="T伺い書基本情報.番号"
+    Expression ="T伺い書基本情報.起案日"
+    Expression ="T伺い書基本情報.種類"
+    Expression ="T伺い書基本情報.施設"
+    Expression ="T伺い書基本情報.所属"
+    Expression ="T伺い書基本情報.起案者"
+    Expression ="T伺い書基本情報.件名"
+    Expression ="T伺い書基本情報.PDFリンク"
+    Expression ="T伺い書基本情報.年度"
+    Expression ="T伺い書基本情報.人事"
+    Expression ="T伺い書基本情報.秘"
+    Expression ="T伺い書基本情報.登録日時"
+End
+dbBoolean "ReturnsRecords" ="-1"
+dbInteger "ODBCTimeout" ="60"
+dbByte "RecordsetType" ="0"
+dbBoolean "OrderByOn" ="0"
+dbByte "Orientation" ="0"
+dbByte "DefaultView" ="2"
+dbBoolean "FilterOnLoad" ="0"
+dbBoolean "OrderByOnLoad" ="-1"
+dbBoolean "TotalsRow" ="0"
+Begin
+End
+Begin
+    State =0
+    Left =0
+    Top =0
+    Right =996
+    Bottom =801
+    Left =-1
+    Top =-1
+    Right =980
+    Bottom =254
+    Left =0
+    Top =0
+    ColumnsShown =539
+    Begin
+        Left =48
+        Top =12
+        Right =192
+        Bottom =156
+        Top =0
+        Name ="T伺い書基本情報"
+        Name =""
+    End
+End
