@@ -47,10 +47,10 @@ On Error GoTo ログイン_SEL_ERR
     strSQL = strSQL & " WHERE 職員番号 = " & CStr(TBLログイン.職員番号)
     'RSオープン
     Call RS_INIT(intSts)
-    rs.Open strSQL, cn, adOpenStatic, adLockOptimistic
     If intSts <> DB_OK Then
         GoTo ログイン_SEL_EXIT
     End If
+    rs.Open strSQL, cn, adOpenStatic, adLockOptimistic
     
     'RSなし
     If rs.EOF Then
@@ -59,7 +59,7 @@ On Error GoTo ログイン_SEL_ERR
     Else
         TBLログイン.職員番号 = Nz(rs.Fields("職員番号").Value, 0)
         TBLログイン.職員氏名 = Nz(rs.Fields("職員氏名").Value, "")
-        TBLログイン.所属部門 = Nz(rs.Fields("所属部門").Value, "")
+        TBLログイン.所属部門 = Nz(rs.Fields("所属部門").Value, 0)
         TBLログイン.使用区分 = Nz(rs.Fields("使用区分").Value, 0)
         TBLログイン.処理端末 = Nz(rs.Fields("処理端末").Value, "")
         TBLログイン.処理日時 = Nz(rs.Fields("処理日時").Value, "")

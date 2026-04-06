@@ -14,10 +14,10 @@ Begin Form
     Width =17348
     DatasheetFontHeight =9
     ItemSuffix =21
-    Left =1665
-    Top =3780
-    Right =19305
-    Bottom =4485
+    Left =720
+    Top =3675
+    Right =14325
+    Bottom =9780
     DatasheetGridlinesColor =12632256
     RecSrcDt = Begin
         0x3c36dbdaae2ae640
@@ -26,7 +26,7 @@ Begin Form
         0x47075eca8bb7be438ab98a7308b5b105
     End
     NameMap = Begin
-        0x0acc0e5500000000000000000000000000000000000000000c00000004000000 ,
+        0x0acc0e5500000000000000000000000000000000000000000c00000005000000 ,
         0x0000000000000000000000000000
     End
     Caption ="基本情報"
@@ -36,10 +36,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x003e7401f83a74017ceb7572183a7401443a7401443a74010000000065307972 ,
         0x010403069c00501453ef8003010009009a0b3408640001000101580202000100 ,
-        0x5802030001004134000000000000000000000000000000000000000000000000 ,
-        0x0000000000000000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb973477d43974010c3a7401103a740100000000 ,
+        0x303a7401a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -208,7 +208,7 @@ Begin Form
     PrtDevNames = Begin
         0x08001f0036000100000000000000000000000000000000000000000000000000 ,
         0x00000000000000000000000000000000000000000000504f525450524f4d5054 ,
-        0x3a00
+        0x3a0000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -224,15 +224,18 @@ Begin Form
         Begin Rectangle
             SpecialEffect =3
             BackStyle =0
+            BorderLineStyle =0
             Width =850
             Height =850
         End
         Begin Line
+            BorderLineStyle =0
             Width =1701
         End
         Begin Image
             BackStyle =0
             OldBorderStyle =0
+            BorderLineStyle =0
             PictureAlignment =2
             Width =1701
             Height =1701
@@ -248,22 +251,26 @@ Begin Form
         End
         Begin OptionButton
             SpecialEffect =2
+            BorderLineStyle =0
             LabelX =230
             LabelY =-30
         End
         Begin CheckBox
             SpecialEffect =2
+            BorderLineStyle =0
             LabelX =230
             LabelY =-30
         End
         Begin OptionGroup
             SpecialEffect =3
+            BorderLineStyle =0
             Width =1701
             Height =1701
         End
         Begin BoundObjectFrame
             SpecialEffect =2
             OldBorderStyle =0
+            BorderLineStyle =0
             BackStyle =0
             Width =4536
             Height =2835
@@ -274,6 +281,7 @@ Begin Form
             SpecialEffect =2
             TextFontCharSet =128
             TextFontFamily =50
+            BorderLineStyle =0
             Width =1701
             Height =225
             LabelX =-1701
@@ -286,6 +294,7 @@ Begin Form
             SpecialEffect =2
             TextFontCharSet =128
             TextFontFamily =50
+            BorderLineStyle =0
             Width =1701
             Height =1417
             LabelX =-1701
@@ -298,6 +307,7 @@ Begin Form
             SpecialEffect =2
             TextFontCharSet =128
             TextFontFamily =50
+            BorderLineStyle =0
             Width =1701
             Height =225
             LabelX =-1701
@@ -308,6 +318,7 @@ Begin Form
         End
         Begin Subform
             SpecialEffect =2
+            BorderLineStyle =0
             Width =1701
             Height =1701
         End
@@ -694,6 +705,12 @@ cmd閲覧_Click_ERR:
     Resume cmd閲覧_Click_EXIT
 
 End Sub
+
+'----------------------------------------------
+'cmd編集はPW認証通過後の制御に変わったため
+'Fメイン.cmd編集_Clickに移動
+'----------------------------------------------
+
 '
 'Private Sub cmd編集_Click()
 '
