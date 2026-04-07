@@ -19,9 +19,9 @@ Begin Form
     Width =14742
     DatasheetFontHeight =9
     ItemSuffix =82
-    Left =6135
+    Left =6510
     Top =2220
-    Right =22320
+    Right =22695
     Bottom =13455
     DatasheetGridlinesColor =12632256
     OnUnload ="[Event Procedure]"
@@ -32,8 +32,8 @@ Begin Form
         0xca25f0e8443f7f499e04608f6b120993
     End
     NameMap = Begin
-        0x0acc0e550000000047075eca8bb7be438ab98a7308b5b10501000000ecc95f83 ,
-        0x4f35e640000000000000000046003a4ff866c560315853007500620000000000 ,
+        0x0acc0e550000000047075eca8bb7be438ab98a7308b5b1050100000010abdcb2 ,
+        0x8e83e640000000000000000046003a4ff866c560315853007500620000000000 ,
         0x0000947c41b113673548b5cb090cf7623b25000000003bb7cf9d8b3ae6400000 ,
         0x0000000000005400745ea65e0000000000006f031e22fa0c4648a5880b1b5bb0 ,
         0x70cf07000000947c41b113673548b5cb090cf7623b25745ea65e000000000000 ,
@@ -55,10 +55,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x00397401683674017ceb757288357401b4357401b43574010000000065307972 ,
+        0x00457d00b8417d007ceb0373d8407d0004417d0004417d000000000065300773 ,
         0x010403069c00501403170104020009009a0b3408640001000f00580201000100 ,
-        0x580203000100413400440000bb973477443574017c3574018035740100000000 ,
-        0xa0357401a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb97e07794407d00cc407d00d0407d0000000000 ,
+        0xf0407d00a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -228,7 +228,7 @@ Begin Form
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000054533030310000000000000000000000000000000000 ,
-        0x0000000000000000
+        0x000000000000000000000000000000000000000000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -971,6 +971,7 @@ Private Sub cmd登録_Click()
     flgShinki = 1
 
     dataArgs = strBangou & "," & strNichiji
+    flgEditTransit = 1
     DoCmd.OpenForm "F新規修正", , , , , , dataArgs
     DoCmd.Close acForm, "Fメイン"
 
@@ -990,15 +991,21 @@ Private Sub cmd編集_Click()
     strBangou = Forms!Fメイン!情報Sub!txt番号
     strNichiji = Forms!Fメイン!情報Sub!登録日時
 
+    排他情報Key_INIT
+    排他情報Key.職員番号 = 職員情報Key.職員番号
+    排他情報Key.伺企番号 = strBangou
+    flgOwari = 0
+
+    If 排他_CHK() = True Then
+        MsgBox 排他情報Key.メッセージ, vbExclamation, cstSys
+        Exit Sub
+    End If
+
     dataArgs = strBangou & "," & strNichiji
     flgShinki = 0
 
+    flgEditTransit = 1
     DoCmd.OpenForm "F新規修正", , , , , , dataArgs
-
-    If flgOwari = 1 Then
-        DoCmd.Close acForm, "F新規修正"
-        Exit Sub
-    End If
 
     If flgHaita = 1 Then
         DoCmd.Close acForm, "F新規修正"
@@ -1039,6 +1046,7 @@ Private Sub Form_Open(Cancel As Integer)
 
     Dim flgJyouken As Integer
     flgOwari = 0
+    flgEditTransit = 0
     flgShinki = 0
 
     Me.cbo施設検索 = Null
@@ -1461,6 +1469,7 @@ End Function
 '  新規追加：×ボタンでフォームを閉じたとき両ロック解放
 ' ================================================================
 Private Sub Form_Unload(Cancel As Integer)
+    If flgEditTransit = 1 Then Exit Sub
     Call 全ロック解放
 End Sub
 
@@ -1479,7 +1488,13 @@ Private Function PW認証チェック() As Boolean
     PW認証チェック = False
 
     Dim strBumon As String
+    Dim strInput As String
+    Dim strPwJimu As String
+    Dim strPwSys As String
+
     strBumon = Trim$(職員情報Key.所属部門)
+    strPwJimu = 設定値取得("PW_JIMU", "")
+    strPwSys = 設定値取得("PW_SYS", "")
 
     ' 所属部門が "3" 以下（一般職員）は編集権限なし
     If strBumon <= "3" Then
@@ -1488,7 +1503,6 @@ Private Function PW認証チェック() As Boolean
     End If
 
     ' ── すでにこのセッションで認証済みならスキップ ──────
-    '   flgPwOk >= 1 かつ 所属部門レベルに合致していれば認証不要
     If strBumon >= "6" Then
         If flgPwOk >= 2 Then
             PW認証チェック = True
@@ -1501,13 +1515,21 @@ Private Function PW認証チェック() As Boolean
         End If
     End If
 
+    If strBumon >= "6" And strPwSys = "" Then
+        MsgBox "システム管理パスワードが未設定です。" & vbCrLf & _
+               "環境変数 UKAGAI_PW_SYS または Tシステム設定 を確認してください。", vbExclamation, cstSys
+        Exit Function
+    ElseIf strBumon >= "4" And strPwJimu = "" Then
+        MsgBox "管理パスワードが未設定です。" & vbCrLf & _
+               "環境変数 UKAGAI_PW_JIMU または Tシステム設定 を確認してください。", vbExclamation, cstSys
+        Exit Function
+    End If
+
     ' ── パスワード入力 ────────────────────
-    Dim strInput As String
     strInput = InputBoxDK("編集・登録パスワードを入力してください", "認証")
 
     If strBumon >= "6" Then
-        ' システム管理者パスワード
-        If strInput = cstPwSys Then
+        If strInput = strPwSys Then
             flgPwOk = 2
             flgHyouji = 2
             flgSYS = 1
@@ -1516,8 +1538,7 @@ Private Function PW認証チェック() As Boolean
             MsgBox cstMsg05, vbExclamation, cstSys
         End If
     ElseIf strBumon >= "4" Then
-        ' 中間管理者パスワード
-        If strInput = cstPwJimu Then
+        If strInput = strPwJimu Then
             flgPwOk = 1
             flgHyouji = 1
             PW認証チェック = True

@@ -135,11 +135,11 @@ On Error GoTo ログイン_INS_ERR
     strSQL = strSQL & " INSERT INTO Tログイン伺企"
     strSQL = strSQL & " VALUES("
     strSQL = strSQL & CStr(TBLログイン.職員番号) & ","
-    strSQL = strSQL & "'" & Trim$(TBLログイン.職員氏名) & "',"
+    strSQL = strSQL & "'" & EscapeSqlText(Trim$(TBLログイン.職員氏名)) & "',"
     strSQL = strSQL & CStr(TBLログイン.所属部門) & ","
     strSQL = strSQL & CStr(TBLログイン.使用区分) & ","
-    strSQL = strSQL & "'" & Trim$(TBLログイン.処理端末) & "',"
-    strSQL = strSQL & "#" & Trim$(TBLログイン.処理日時) & "#"
+    strSQL = strSQL & "'" & EscapeSqlText(Trim$(TBLログイン.処理端末)) & "',"
+    strSQL = strSQL & "#" & EscapeSqlText(Trim$(TBLログイン.処理日時)) & "#"
     strSQL = strSQL & " )"
     '実行
     Call CN_EXEC(intSts)
@@ -160,4 +160,3 @@ On Error GoTo ログイン_INS_ERR
     GoTo ログイン_INS_EXIT
 
 End Function
-

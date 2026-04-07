@@ -1,6 +1,6 @@
 Version =19
 VersionRequired =19
-Checksum =-2021494231
+Checksum =-2021494615
 Begin Form
     AutoResize = NotDefault
     PopUp = NotDefault
@@ -24,10 +24,11 @@ Begin Form
     Width =13041
     DatasheetFontHeight =11
     ItemSuffix =65
-    Left =3180
+    Left =5580
     Top =2925
-    Right =16005
+    Right =18405
     Bottom =11235
+    DatasheetGridlinesColor =15062992
     RecSrcDt = Begin
         0x47e33c8c2f2be640
     End
@@ -36,14 +37,14 @@ Begin Form
     End
     NameMap = Begin
         0x0acc0e5500000000a277841f30d54a4995446b6e00e4873a000000004e41f418 ,
-        0x5536e640806b7003f461ef005400ed30b030a430f3303a4f014f000000000000 ,
+        0x5536e64000000000000000005400ed30b030a430f3303a4f014f000000000000 ,
         0x1ff1b8a4b2b8154cb84dedfb50d2bd8507000000a277841f30d54a4995446b6e ,
         0x00e4873a7780e1546a75f75300000000000022ef68dc63d4a5499ef69626ec27 ,
         0x28f507000000a277841f30d54a4995446b6e00e4873a7780e1540f6c0d540000 ,
         0x00000000c6a8135f437ff54cafa7fac15c9ad87007000000a277841f30d54a49 ,
         0x95446b6e00e4873ae6510674ef7a2b670000000000000bb6e2ad9c8f2d4aafb9 ,
         0x8d7c30422bf907000000a277841f30d54a4995446b6e00e4873ae6510674e565 ,
-        0x4266000000000000000000000000000000000000000000000c00000004000000 ,
+        0x4266000000000000000000000000000000000000000000000c00000005000000 ,
         0x0000000000000000000000000000
     End
     RecordSource ="SELECT Tログイン伺企.職員番号, Tログイン伺企.職員氏名, Tログイン伺企.処理端末, Tログイン伺企.処理日時 FROM Tログイン伺企; "
@@ -53,10 +54,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x003d7800983a78007ceb0373b8397800e4397800e43978000000000065300773 ,
         0x010403069c00501403ff0000010009009a0b3408640001000700580201000100 ,
-        0x5802030001004134000000000000000000000000000000000000000000000000 ,
-        0x0000000000000000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb97e07774397800ac397800b039780000000000 ,
+        0xd0397800a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -225,7 +226,7 @@ Begin Form
     PrtDevNames = Begin
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
-        0x00000000000000000000545330303100
+        0x0000000000000000000054533030310000000000
     End
     OnLoad ="[Event Procedure]"
     NoSaveCTIWhenDisabled =1
@@ -239,6 +240,7 @@ Begin Form
         Begin Rectangle
             SpecialEffect =3
             BackStyle =0
+            BorderLineStyle =0
             Width =850
             Height =850
         End
@@ -253,12 +255,14 @@ Begin Form
         End
         Begin CheckBox
             SpecialEffect =2
+            BorderLineStyle =0
             LabelX =230
             LabelY =-30
         End
         Begin TextBox
             FELineBreak = NotDefault
             TextFontCharSet =128
+            BorderLineStyle =0
             Width =1701
             Height =270
             LabelX =-1701
@@ -268,6 +272,7 @@ Begin Form
         End
         Begin ComboBox
             TextFontCharSet =128
+            BorderLineStyle =0
             Width =1701
             Height =270
             LabelX =-1701
@@ -276,6 +281,7 @@ Begin Form
             FontName ="ＭＳ Ｐゴシック"
         End
         Begin Subform
+            BorderLineStyle =0
             Width =1701
             Height =1701
             BorderColor =12632256
@@ -314,9 +320,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     TextFontFamily =49
-                    Left =4307
-                    Top =850
-                    Width =3366
+                    Left =4290
+                    Top =855
+                    Width =3360
                     Height =270
                     Name ="lbl処理日時"
                     Caption ="ログイン日時"
@@ -328,9 +334,9 @@ Begin Form
                 Begin Label
                     OverlapFlags =85
                     TextFontFamily =49
-                    Left =2831
-                    Top =850
-                    Width =1416
+                    Left =2820
+                    Top =855
+                    Width =1410
                     Height =270
                     Name ="lbl処理端末"
                     Caption ="処理端末"
@@ -341,9 +347,9 @@ Begin Form
                 End
                 Begin Label
                     OverlapFlags =85
-                    Left =170
-                    Top =850
-                    Width =2601
+                    Left =165
+                    Top =855
+                    Width =2595
                     Height =270
                     Name ="ラベル64"
                     Caption ="職員氏名:"
@@ -372,9 +378,9 @@ Begin Form
                     TextFontFamily =49
                     IMEMode =2
                     BackStyle =0
-                    Left =4307
+                    Left =4290
                     Top =60
-                    Width =3366
+                    Width =3360
                     ColumnWidth =2460
                     FontWeight =700
                     TabIndex =2
@@ -396,9 +402,9 @@ Begin Form
                     TextFontFamily =49
                     IMEMode =1
                     BackStyle =0
-                    Left =2831
+                    Left =2820
                     Top =60
-                    Width =1416
+                    Width =1410
                     FontWeight =700
                     TabIndex =1
                     ForeColor =16777215
@@ -417,9 +423,9 @@ Begin Form
                     TextFontFamily =49
                     IMEMode =1
                     BackStyle =0
-                    Left =170
+                    Left =165
                     Top =60
-                    Width =2601
+                    Width =2595
                     FontWeight =700
                     ForeColor =16777215
                     Name ="txt職員氏名"
@@ -485,26 +491,23 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+
 Private intSts      As Integer
 
 Private Sub cmd削除_Click()
 On Error GoTo Err_cmd削除_Click
-    Call CN_INIT(intSts)
-    
-    cn.BeginTrans
-    
-    strSQL = ""
-    strSQL = strSQL & "delete * from Tログイン伺企 "
-    strSQL = strSQL & "where 職員氏名 = '" & txt職員氏名 & "'"
-    
-    cn.Execute strSQL
 
-    cn.CommitTrans
+    Call TBLログイン_INIT
+    TBLログイン.職員番号 = Nz(Me.txt職員番号, 0)
 
-    Call CN_END
-    
-    Call データ削除("Tログイン伺企", "職員氏名", CStr(Me.txt職員氏名))
-    
+    If TBLログイン.職員番号 = 0 Then
+        MsgBox "職員番号が取得できません。", vbExclamation
+        Exit Sub
+    End If
+
+    Call ログイン_DEL
+    Call データ削除("Tログイン伺企", "職員番号", CStr(TBLログイン.職員番号))
+
     Me.Requery
     
 Exit_cmd削除_Click:
@@ -513,7 +516,6 @@ Exit_cmd削除_Click:
 Err_cmd削除_Click:
     MsgBox Err.Description
     Resume Exit_cmd削除_Click
-    cn.RollbackTrans
 
 End Sub
 

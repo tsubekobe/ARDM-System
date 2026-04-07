@@ -36,8 +36,8 @@ Begin Form
         0x9e4f37ec7440d74982319c969e356907
     End
     NameMap = Begin
-        0x0acc0e5500000000528ee5700831524cbe4a2f755dd26479000000005892011e ,
-        0x5283e64000000000000000005100bd652d8a0d540000000000005fef0cc3ded0 ,
+        0x0acc0e5500000000528ee5700831524cbe4a2f755dd2647900000000c524bfcf ,
+        0xf184e64000000000000000005100bd652d8a0d540000000000005fef0cc3ded0 ,
         0x0842b4ce633f88042f67000000009fabad58ce2ae64000000000000000005400 ,
         0xb330fc30c930a17b067400000000000059a9f9f8735ea749af8b546d95d274b5 ,
         0x070000005fef0cc3ded00842b4ce633f88042f67b330fc30c9300d54f0790000 ,
@@ -55,10 +55,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x00ba7600d8b676007ceb5972f8b5760024b6760024b676000000000065305d72 ,
+        0x00454e0038424e007ceb037358414e0084414e0084414e000000000065300773 ,
         0x010403069c00501453ef8003010009009a0b3408640001000101580202000100 ,
-        0x580203000100413400440000bb977177b4b57600ecb57600f0b5760000000000 ,
-        0x10b67600a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb97e07714414e004c414e0050414e0000000000 ,
+        0x70414e00a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -227,7 +227,7 @@ Begin Form
     PrtDevNames = Begin
         0x08001f0036000100000000000000000000000000000000000000000000000000 ,
         0x00000000000000000000000000000000000000000000504f525450524f4d5054 ,
-        0x3a00000000000000000000000000
+        0x3a000000000000000000000000000000000000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -989,120 +989,61 @@ Private Sub cmd登録_Click()
 On Error GoTo Err_cmd登録_Click
 
     Dim strTable As String
+    Dim cmd As ADODB.Command
+    Dim strLockKey2 As String
 
     If flgSyubetu = 1 Then
-'    If 1 = 1 Then
         strTable = "T伺い書基本情報"
     ElseIf flgSyubetu = 2 Then
         strTable = "T企画書基本情報"
-    End If
-
-    '*** 登録処理
-    
-    If flgShinki = 1 Then
-        
-        'INSERT文
-        strSQL = ""
-        strSQL = strSQL & " INSERT INTO " & strTable
-        strSQL = strSQL & " VALUES("
-        strSQL = strSQL & "'" & Trim$(Me.txt処理番号) & "',"
-        If Nz(Me.txt起案日, "") = "" Or Me.txt起案日 = "" Then
-            strSQL = strSQL & "Null,"
-        Else
-            strSQL = strSQL & "#" & Trim$(Me.txt起案日) & "#,"
-        End If
-        If IsNull(Me.cbo種別) = True Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.cbo種別) & "',"
-        End If
-        If IsNull(Me.cbo施設) = True Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.cbo施設) & "',"
-        End If
-        If IsNull(Me.cbo所属) = True Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.cbo所属) & "',"
-        End If
-        If Nz(Me.txt起案者, "") = "" Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.txt起案者) & "',"
-        End If
-        If Nz(Me.txt件名, "") = "" Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.txt件名) & "',"
-        End If
-        If Nz(Me.txtPDFリンク, "") = "" Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.txtPDFリンク) & "',"
-        End If
-        If Nz(Me.cbo年度, "") = "" Then
-            strSQL = strSQL & "'" & "" & "',"
-        Else
-            strSQL = strSQL & "'" & Trim$(Me.cbo年度) & "',"
-        End If
-        strSQL = strSQL & (Me.chk人事) & ","
-        strSQL = strSQL & (Me.chk秘) & ","
-        strSQL = strSQL & "#" & Trim$(Me.txtNow) & "#"
-        strSQL = strSQL & " )"
-        
-        MsgBox "新規データを登録しました。"
     Else
-        'UPDATE文
-        strSQL = ""
-        strSQL = "update " & strTable
-        strSQL = strSQL & " SET"
-        strSQL = strSQL & " 番号 = " & CStr(Nz(Me.txt処理番号, "")) & ","
-        'strSQL = strSQL & " 起案日 = '" & CStr(Me.txt伺書起案日) & "',"
-        strSQL = strSQL & " 起案日 = #" & Me.txt起案日 & "#,"
-        If IsNull(Me.cbo種別) = True Then
-            strSQL = strSQL & " 種類 = '" & "" & "',"
-        Else
-            strSQL = strSQL & " 種類 = '" & Trim$(CStr(Nz(Me.cbo種別, ""))) & "',"
-        End If
-        If IsNull(Me.cbo施設) = True Then
-            strSQL = strSQL & " 施設 = '" & "" & "',"
-        Else
-            strSQL = strSQL & " 施設 = '" & Trim$(CStr(Nz(Me.cbo施設, ""))) & "',"
-        End If
-        If IsNull(Me.cbo所属) = True Then
-            strSQL = strSQL & " 所属 = '" & "" & "',"
-        Else
-            strSQL = strSQL & " 所属 = '" & Trim$(CStr(Nz(Me.cbo所属, ""))) & "',"
-        End If
-        strSQL = strSQL & " 起案者 = '" & CStr(Nz(Me.txt起案者, "")) & "',"
-        strSQL = strSQL & " 件名 = '" & CStr(Nz(Me.txt件名, "")) & "',"
-        strSQL = strSQL & " PDFリンク = '" & CStr(Nz(Me.txtPDFリンク, "")) & "',"
-        strSQL = strSQL & " 年度 = '" & CStr(Nz(Me.cbo年度, "")) & "',"
-        strSQL = strSQL & " 人事 = " & (Me.chk人事) & ","
-        strSQL = strSQL & " 秘 = " & (Me.chk秘)
-    'WHERE句
-        strSQL = strSQL & " WHERE 登録日時 = #" & Me.txt登録 & "#"
-        
-        MsgBox "データを修正登録しました。"
-
+        MsgBox "登録対象が判定できません。", vbExclamation, cstSys
+        Exit Sub
     End If
-    
-     Call CN_INIT(intSts)
-'    MsgBox cn.State    '接続状態確認　cn=1なら接続
-    Call RS_INIT(intSts)
-    
-    'SQLの実行（レコードの更新・追加）
-    '*** トランザクション開始
-    cn.BeginTrans
-    cn.Execute strSQL 'SQLを実行]
-    
-    '*** コミット
-    cn.CommitTrans   ' ← 既存
 
-    ' ★ 追加：新規登録時は番号発番ロックを解放する
+    Call CN_INIT(intSts)
+    If intSts <> DB_OK Then Exit Sub
+
+    Set cmd = New ADODB.Command
+    Set cmd.ActiveConnection = cn
+    cmd.CommandType = adCmdText
+
     If flgShinki = 1 Then
-        Dim strLockKey2 As String
+        cmd.CommandText = _
+            "INSERT INTO " & strTable & _
+            " (番号, 起案日, 種類, 施設, 所属, 起案者, 件名, PDFリンク, 年度, 人事, 秘, 登録日時)" & _
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    Else
+        cmd.CommandText = _
+            "UPDATE " & strTable & _
+            " SET 番号 = ?, 起案日 = ?, 種類 = ?, 施設 = ?, 所属 = ?, 起案者 = ?, 件名 = ?, PDFリンク = ?, 年度 = ?, 人事 = ?, 秘 = ?" & _
+            " WHERE 登録日時 = ?"
+    End If
+
+    cmd.Parameters.Append cmd.CreateParameter("p番号", adVarWChar, adParamInput, 20, Nz(Me.txt処理番号, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p起案日", adDate, adParamInput, , IIf(Nz(Me.txt起案日, "") = "", Null, CDate(Me.txt起案日)))
+    cmd.Parameters.Append cmd.CreateParameter("p種類", adVarWChar, adParamInput, 20, Nz(Me.cbo種別, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p施設", adVarWChar, adParamInput, 50, Nz(Me.cbo施設, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p所属", adVarWChar, adParamInput, 100, Nz(Me.cbo所属, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p起案者", adVarWChar, adParamInput, 50, Nz(Me.txt起案者, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p件名", adLongVarWChar, adParamInput, Len(Nz(Me.txt件名, "")) + 1, Nz(Me.txt件名, ""))
+    cmd.Parameters.Append cmd.CreateParameter("pPDFリンク", adVarWChar, adParamInput, 255, Nz(Me.txtPDFリンク, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p年度", adVarWChar, adParamInput, 10, Nz(Me.cbo年度, ""))
+    cmd.Parameters.Append cmd.CreateParameter("p人事", adBoolean, adParamInput, , Nz(Me.chk人事, False))
+    cmd.Parameters.Append cmd.CreateParameter("p秘", adBoolean, adParamInput, , Nz(Me.chk秘, False))
+
+    If flgShinki = 1 Then
+        cmd.Parameters.Append cmd.CreateParameter("p登録日時", adDate, adParamInput, , CDate(Me.txtNow))
+    Else
+        cmd.Parameters.Append cmd.CreateParameter("p登録日時", adDate, adParamInput, , CDate(Me.txt登録))
+    End If
+
+    cn.BeginTrans
+    cmd.Execute
+    cn.CommitTrans
+
+    If flgShinki = 1 Then
+        MsgBox "新規データを登録しました。"
         If flgSyubetu = 1 Then
             strLockKey2 = "NEW_T伺い書"
         Else
@@ -1111,11 +1052,15 @@ On Error GoTo Err_cmd登録_Click
         Call TBLロック_INIT
         TBLロック.伺企番号 = strLockKey2
         TBLロック.職員番号 = 職員情報Key.職員番号
-        Call ロック_DEL_BY_KEY(strLockKey2)   ' ← 下記の新関数
+        Call ロック_DEL_BY_KEY(strLockKey2)
+    Else
+        MsgBox "データを修正登録しました。"
     End If
 
-    Call 排他_DEL   ' ← 既存
-    
+    Call 排他_DEL
+    Set cmd = Nothing
+    Call CN_END
+
     DoCmd.Close acForm, "F新規修正"
     DoCmd.OpenForm "Fメイン"
 
@@ -1123,22 +1068,20 @@ Exit_cmd登録_Click:
     Exit Sub
 
 Err_cmd登録_Click:
-    'ODBC接続エラーの判定
+    On Error Resume Next
+    If Not cn Is Nothing Then
+        If cn.State = 1 Then cn.RollbackTrans
+    End If
+    Set cmd = Nothing
+    Call CN_END
+
     If Err.Number = 3146 Then
-        MsgBox "SQLサーバーに接続できませんでした。" & vbCrLf & _
-        "　システムを終了します。" & vbCritical
-        'ロールバック処理
-        CN1.RollbackTrans
-        'システム終了
+        MsgBox "データベースに接続できませんでした。" & vbCrLf & _
+               "システムを終了します。", vbCritical
         DoCmd.Quit
-    'ODBC接続以外のエラー
     Else
-        MsgBox "データベース管理者に連絡してください。" & Str$(Err) & _
-        Err.Description, vbCritical
-        'ロールバック処理
-'        cn1.RollbackTrans
-        'システム終了
-'        DoCmd.Quit
+        MsgBox "データベース管理者に連絡してください。" & vbCrLf & _
+               Err.Number & " : " & Err.Description, vbCritical
     End If
     Resume Exit_cmd登録_Click
 
@@ -1250,7 +1193,6 @@ Private Sub Form_Open(Cancel As Integer)
         排他情報Key.職員番号 = 職員情報Key.職員番号
         排他情報Key.伺企番号 = Me.txt抽出番号
         If 排他_CHK() = True Then
-            MsgBox (排他情報Key.メッセージ)
             Exit Sub
         End If
     End If
@@ -1265,6 +1207,7 @@ End Sub
 Private Sub Form_Unload(Cancel As Integer)
     ' 編集モードの場合のみ文書ロックを解放する
     If flgShinki = 0 Then
+        On Error Resume Next
         Call 排他_DEL
     End If
 End Sub

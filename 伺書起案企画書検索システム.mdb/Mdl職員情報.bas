@@ -43,7 +43,7 @@ On Error GoTo 職員管理_SEL_ERR
     strSQL = strSQL & " SELECT *"
     strSQL = strSQL & " FROM T職員管理"
     'WHERE句
-    strSQL = strSQL & " WHERE 処理端末 = '" & Trim$(職員情報Key.処理端末) & "'"
+    strSQL = strSQL & " WHERE 処理端末 = '" & EscapeSqlText(Trim$(職員情報Key.処理端末)) & "'"
     
     'RSオープン
     Call RS_INIT(intSts)
@@ -75,3 +75,4 @@ On Error GoTo 職員管理_SEL_ERR
     GoTo 職員管理_SEL_EXIT
 
 End Function
+

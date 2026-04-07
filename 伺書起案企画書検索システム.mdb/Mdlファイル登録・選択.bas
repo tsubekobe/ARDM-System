@@ -6,12 +6,12 @@ Public Sub PDF登録()
 
 On Error GoTo Err_PDFTouroku_Click
 
-    Dim mojisuu As Long      ' Integer → Long に修正
-    Dim mojinuki As Long     ' Integer → Long に修正
+    Dim mojisuu As Integer
+    Dim mojinuki As Integer
     Dim Rmoji   As String
     Dim Lmoji   As String
     Dim strSrc  As String
-    Dim strFname As String
+'    Dim strFname As String
         
     strSrc = ファイル選択
     mojisuu = Len(strSrc)
@@ -61,11 +61,8 @@ On Error GoTo ErrorHandler
         .Title = "ファイル選択"
         
         'ファイルの種類を定義します。
-        .Filters.Clear
         .Filters.Add "PDF ファイル", "*.PDF"
-        .Filters.Clear
         .Filters.Add "pdfファイル", "*.pdf"
-        .Filters.Clear
         .Filters.Add "すべてのファイル", "*.*"
         
         '複数ファイル選択を可能にする場合はTrue、不可の場合はFalse。

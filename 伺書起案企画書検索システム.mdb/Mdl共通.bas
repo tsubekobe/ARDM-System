@@ -47,13 +47,12 @@ Public strSyuryoEx     As String
 Public strFname        As String
 Public flgOwari        As Integer
 Public flgHyouji       As Integer
+Public flgEditTransit  As Integer
 Public strQry          As String
 Public strTbl          As String
 
 ' ── 既存の変数宣言に以下を追加 ──────────────────────────────────
 Public flgPwOk      As Integer   ' ★ 追加: 0=PW未認証, 1=中間管理PW認証済, 2=SYS管理PW認証済
-Public Const cstPwJimu  As String = "jimu1319s"
-Public Const cstPwSys   As String = "sys0120310272"
 Public strNextBangou   As String   ' 新規登録時の次番号（受付年度()から受け取る）
 
 'システム名
@@ -102,6 +101,62 @@ Type 端末情報Key
     処理端末            As String * 10
 End Type
 Public 端末情報Key      As 端末情報Key
+
+Public Function EscapeSqlText(ByVal strValue As String) As String
+
+    EscapeSqlText = Replace(Nz(strValue, ""), "'", "''")
+
+End Function
+
+Public Function 設定値取得(ByVal strKey As String, Optional ByVal strDefault As String = "") As String
+
+On Error GoTo 設定値取得_ERR
+
+    Dim varValue As Variant
+    Dim strEnvName As String
+    Dim strEnvValue As String
+    Dim strFallback As String
+
+    Select Case UCase$(Trim$(strKey))
+        Case "PW_JIMU"
+            strEnvName = "UKAGAI_PW_JIMU"
+            strFallback = "jimu1319s"
+        Case "PW_SYS"
+            strEnvName = "UKAGAI_PW_SYS"
+            strFallback = "sys0120310272"
+        Case Else
+            strFallback = strDefault
+    End Select
+
+    If strDefault <> "" Then
+        設定値取得 = strDefault
+    Else
+        設定値取得 = strFallback
+    End If
+
+    If strEnvName <> "" Then
+        strEnvValue = Trim$(Environ$(strEnvName))
+        If strEnvValue <> "" Then
+            設定値取得 = strEnvValue
+            Exit Function
+        End If
+    End If
+
+    If DCount("*", "MSysObjects", "Name='Tシステム設定' AND Type In (1,4,6)") = 0 Then
+        Exit Function
+    End If
+
+    varValue = DLookup("設定値", "Tシステム設定", "設定キー = '" & EscapeSqlText(strKey) & "'")
+    If Not IsNull(varValue) Then
+        設定値取得 = CStr(varValue)
+    End If
+
+    Exit Function
+
+設定値取得_ERR:
+    ' 設定テーブルが無い環境では既定値または旧運用値にフォールバック
+
+End Function
 
 ' CN_INIT を修正（Sub内のPublic Const宣言を削除する）
 Sub CN_INIT(Optional ByRef intSts As Integer)
@@ -273,25 +328,13 @@ End Function
 ' --------------------------------------------------------
 Public Sub GetTableDWH(strTbl As String)
 
-    Dim strSQL_R As String
-    Dim strMessage As String
     Dim strFd As String
     
     ' Serverから読み込む側の設定
     Dim cn_R As Object 'ADOコネクションオブジェクト
     Set cn_R = CreateObject("ADODB.Connection") 'ADOコネクションのオブジェクトを作成
-     
-    '新テストか本番か
-    #If IS_TEST Then
-        strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\STAGE_伺書起案企画書DB.mdb"
-    #Else
-        strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb"
-    #End If
-     
-     '旧テスト環境
-'    strFd = "Z:\伺書起案企画書DB.mdb"
-'    本番環境
-    strFd = "\\flsv1\fsroot\towada\福祉の里\DataBase\STAGE_伺書起案企画書DB.mdb"
+    
+    strFd = DB_SERVER_PATH
     cn_R.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strFd
 
     ' ローカルAccessへ書き込む側の設定
@@ -303,12 +346,11 @@ Public Sub GetTableDWH(strTbl As String)
 
     ' 読み書きの設定を終了する
     cn_R.Close: Set cn_R = Nothing 'コネクションの破棄
-    cn_W.Close: Set cn_W = Nothing 'コネクションの破棄
+    Set cn_W = Nothing
 
 '    MsgBox "取り込み処理が完了しました！" & vbCrLf & vbCrLf & strMessage
     
 End Sub
-
 ' --------------------------------------------------------
 ' Server のテーブルを、端末ACCESSにコピーする
 ' --------------------------------------------------------
@@ -365,15 +407,7 @@ Sub データ書込(ByVal strQry As String, ByVal strTbl As String)
 
     On Error GoTo データ書込_Err
     
-    '新テストか本番か
-    #If IS_TEST Then
-          DoCmd.TransferDatabase acImport, "Microsoft Access", "\\flsv1\fsroot\towada\福祉の里\DataBase\STAGE_伺書起案企画書DB.mdb", acTable, strQry, strTbl, False
-    #Else
-        DoCmd.TransferDatabase acImport, "Microsoft Access", "\\flsv1\fsroot\towada\福祉の里\DataBase\伺書起案企画書DB.mdb", acTable, strQry, strTbl, False
-
-    #End If
-    
-        
+    DoCmd.TransferDatabase acImport, "Microsoft Access", DB_SERVER_PATH, acTable, strQry, strTbl, False
 データ書込_Exit:
     Exit Sub
 データ書込_Err:
@@ -433,3 +467,11 @@ Public Sub 全ロック解放()
     flgPwOk = 0
 
 End Sub
+
+Public Sub 安全ロック解放()
+
+On Error Resume Next
+    Call 全ロック解放
+
+End Sub
+

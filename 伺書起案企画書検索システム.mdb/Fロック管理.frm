@@ -1,6 +1,6 @@
 Version =19
 VersionRequired =19
-Checksum =-2021494615
+Checksum =2021493929
 Begin Form
     AutoResize = NotDefault
     PopUp = NotDefault
@@ -54,10 +54,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x00397401683674017ceb757288357401b4357401b43574010000000065307972 ,
+        0x003d7800983a78007ceb0373b8397800e4397800e43978000000000065300773 ,
         0x010403069c00501403ff0000010009009a0b3408640001000700580201000100 ,
-        0x580203000100413400440000bb973477443574017c3574018035740100000000 ,
-        0xa0357401a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb97e07774397800ac397800b039780000000000 ,
+        0xd0397800a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -226,7 +226,8 @@ Begin Form
     PrtDevNames = Begin
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
-        0x0000000000000000000054533030310000000000000000000000000000000000
+        0x0000000000000000000054533030310000000000000000000000000000000000 ,
+        0x00000000
     End
     OnLoad ="[Event Procedure]"
     NoSaveCTIWhenDisabled =1
@@ -531,20 +532,16 @@ Private intSts      As Integer
 Private Sub cmd削除_Click()
 On Error GoTo Err_cmd削除_Click
 
-    Call CN_INIT(intSts)
-    cn.BeginTrans
+    Dim strKey As String
 
-    strSQL = ""
-    strSQL = strSQL & "DELETE * FROM Tロック伺企 "
-    strSQL = strSQL & "WHERE 伺企番号 = '" & txt企画番号 & "'"
-    ' "伺企番号" に修正
+    strKey = Nz(Me.txt企画番号, "")
+    If strKey = "" Then
+        MsgBox "伺企番号が取得できません。", vbExclamation
+        Exit Sub
+    End If
 
-    cn.Execute strSQL
-    cn.CommitTrans
-    Call CN_END
-
-    ' ローカルテーブルからも削除
-    Call データ削除("Tロック伺企", "伺企番号", CStr(Me.txt企画番号))  ' ← フィールド名修正
+    Call ロック_DEL_BY_KEY(strKey)
+    Call データ削除("Tロック伺企", "伺企番号", strKey)
 
     Me.Requery
 
@@ -552,7 +549,6 @@ Exit_cmd削除_Click:
     Exit Sub
 
 Err_cmd削除_Click:
-    If cn.State = 1 Then cn.RollbackTrans  ' ← ロールバックを追加
     MsgBox Err.Description
     Resume Exit_cmd削除_Click
 End Sub
