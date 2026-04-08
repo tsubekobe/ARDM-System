@@ -1,6 +1,6 @@
 Version =19
 VersionRequired =19
-Checksum =2021493929
+Checksum =-2021494103
 Begin Form
     PopUp = NotDefault
     RecordSelectors = NotDefault
@@ -55,10 +55,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x00407800e83c78007cebbb72083c7800343c7800343c7800000000006530bf72 ,
+        0x00449200084192007cebbb72284092005440920054409200000000006530bf72 ,
         0x010403069c00501403170104020009009a0b3408640001000f00580201000100 ,
-        0x580203000100413400440000bb977b77c43b7800fc3b7800003c780000000000 ,
-        0x203c7800a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb977b77e43f92001c4092002040920000000000 ,
+        0x40409200a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -228,7 +228,8 @@ Begin Form
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000054533030310000000000000000000000000000000000 ,
-        0x00000000000000000000000000000000000000000000000000000000
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -852,6 +853,7 @@ Public strTable  As String
 Private intSts   As Integer
 Private rs2      As ADODB.Recordset   ' 追加 未宣言だった
 Private strQuery As String            ' 追加 未宣言だった
+Private lng表示件数 As Long
 
 
 ' ================================================================
@@ -985,11 +987,17 @@ Private Sub cmd編集_Click()
 
     Dim dataArgs As String
 
+    If 編集対象ありチェック() = False Then Exit Sub
+
     ' ── PW認証チェック ───────────────────
     If Not PW認証チェック("EDIT") Then Exit Sub
 
-    strBangou = Forms!Fメイン!情報Sub!txt番号
-    strNichiji = Forms!Fメイン!情報Sub!登録日時
+    On Error GoTo cmd編集_Click_NoData
+    strBangou = Nz(Me.情報Sub.Form!txt番号, "")
+    strNichiji = Nz(Me.情報Sub.Form!登録日時, "")
+    On Error GoTo 0
+
+    If strBangou = "" Or strNichiji = "" Then GoTo cmd編集_Click_NoData
 
     排他情報Key_INIT
     排他情報Key.職員番号 = 職員情報Key.職員番号
@@ -1015,8 +1023,35 @@ Private Sub cmd編集_Click()
         DoCmd.Close acForm, "Fメイン"
     End If
 
+    Exit Sub
+
+cmd編集_Click_NoData:
+    MsgBox "編集対象がありません。先に検索条件を指定して対象を表示してください。", vbExclamation, cstSys
+
 End Sub
 
+Private Function 編集対象ありチェック() As Boolean
+
+    On Error GoTo 編集対象ありチェック_ERR
+
+    編集対象ありチェック = False
+
+    If Me.情報Sub.SourceObject = "" Then GoTo 編集対象ありチェック_NG
+    If lng表示件数 <= 0 Then GoTo 編集対象ありチェック_NG
+    If Nz(Me.情報Sub.Form!txt番号, "") = "" Then GoTo 編集対象ありチェック_NG
+    If Nz(Me.情報Sub.Form!登録日時, "") = "" Then GoTo 編集対象ありチェック_NG
+
+    編集対象ありチェック = True
+    Exit Function
+
+編集対象ありチェック_NG:
+    MsgBox "編集対象がありません。先に検索条件を指定して対象を表示してください。", vbExclamation, cstSys
+    Exit Function
+
+編集対象ありチェック_ERR:
+    MsgBox "編集対象がありません。先に検索条件を指定して対象を表示してください。", vbExclamation, cstSys
+
+End Function
 
 ' ================================================================
 ' 戻るボタン：文書ロック＋ログインロックを解放してメニューへ
@@ -1191,6 +1226,7 @@ On Error GoTo 検索詳細_ERR
     strExtract2 = ""
     strSyurui = ""
     strFilter = ""
+    lng表示件数 = 0
 
     ' ── クエリ名の決定 ─────────────────────
     If CStr(flgSyubetu) = "1" Then
@@ -1300,6 +1336,7 @@ On Error GoTo 検索詳細_ERR
     rs2.Open strm
 
     Set Me.情報Sub.Form.Recordset = rs2
+    lng表示件数 = rs2.RecordCount
 
     rs2.Close: Set rs2 = Nothing
     Call RS_END
@@ -1308,6 +1345,7 @@ On Error GoTo 検索詳細_ERR
     Exit Sub
 
 検索詳細_ERR:
+    lng表示件数 = 0
     If Not rs2 Is Nothing Then rs2.Close: Set rs2 = Nothing
     Call RS_END
     Call CN_END
