@@ -1,6 +1,6 @@
 Version =19
 VersionRequired =19
-Checksum =2021421225
+Checksum =-2021421911
 Begin Form
     AutoCenter = NotDefault
     AllowAdditions = NotDefault
@@ -15,7 +15,7 @@ Begin Form
     DatasheetFontHeight =9
     ItemSuffix =21
     Top =2895
-    Right =14580
+    Right =13860
     Bottom =4935
     DatasheetGridlinesColor =12632256
     RecSrcDt = Begin
@@ -35,10 +35,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x003e7401f83a74017ceb7572183a7401443a7401443a74010000000065307972 ,
+        0x00ebbb72204d6e004c4d6e004c4d6e00000000006530bf721c4d6e00439cbb72 ,
         0x010403069c00501453ef8003010009009a0b3408640001000101580202000100 ,
-        0x580203000100413400440000bb973477d43974010c3a7401103a740100000000 ,
-        0x303a7401a7610000000000000000000000000000010000000000000001000000 ,
+        0x5802030001004134004c6e00144d6e00184d6e0000000000384d6e00a761bc72 ,
+        0x004e6e00a01a0000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -207,7 +207,8 @@ Begin Form
     PrtDevNames = Begin
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
-        0x0000000000000000000054533031370000000000
+        0x0000000000000000000054533031370000000000000000000000000000000000 ,
+        0x00000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -399,7 +400,7 @@ Begin Form
                     OldBorderStyle =1
                     OverlapFlags =93
                     TextAlign =2
-                    Left =3970
+                    Left =3870
                     Width =1863
                     Height =284
                     FontSize =10
@@ -419,7 +420,7 @@ Begin Form
                     OldBorderStyle =1
                     OverlapFlags =95
                     TextAlign =2
-                    Left =5833
+                    Left =5733
                     Width =1981
                     Height =284
                     FontSize =10
@@ -438,7 +439,7 @@ Begin Form
                     BackStyle =1
                     OldBorderStyle =1
                     OverlapFlags =95
-                    Left =7814
+                    Left =7714
                     Top =1
                     Width =4674
                     Height =284
@@ -459,7 +460,7 @@ Begin Form
                     OldBorderStyle =1
                     OverlapFlags =87
                     TextAlign =2
-                    Left =12488
+                    Left =12388
                     Top =1
                     Width =1065
                     Height =284
@@ -482,7 +483,7 @@ Begin Form
                     TextAlign =2
                     Left =2694
                     Top =1
-                    Width =1276
+                    Width =1171
                     Height =284
                     FontSize =10
                     FontWeight =600
@@ -530,7 +531,7 @@ Begin Form
                     Locked = NotDefault
                     OverlapFlags =93
                     IMEMode =4
-                    Left =3970
+                    Left =3870
                     Width =1863
                     Height =313
                     ColumnWidth =2310
@@ -551,7 +552,7 @@ Begin Form
                     TextAlign =2
                     IMEMode =4
                     IMESentenceMode =1
-                    Left =5833
+                    Left =5733
                     Width =1981
                     Height =313
                     ColumnWidth =2310
@@ -571,7 +572,7 @@ Begin Form
                     EnterKeyBehavior = NotDefault
                     OverlapFlags =87
                     IMEMode =4
-                    Left =7814
+                    Left =7714
                     Width =4674
                     Height =313
                     ColumnWidth =3000
@@ -588,7 +589,7 @@ Begin Form
                 End
                 Begin TextBox
                     Visible = NotDefault
-                    OverlapFlags =93
+                    OverlapFlags =85
                     TextAlign =2
                     IMEMode =8
                     IMESentenceMode =3
@@ -607,10 +608,10 @@ Begin Form
                     End
                 End
                 Begin TextBox
-                    OverlapFlags =247
+                    OverlapFlags =85
                     TextAlign =2
                     IMEMode =1
-                    Left =14805
+                    Left =13785
                     Top =60
                     Width =1584
                     ColumnOrder =4
@@ -661,25 +662,24 @@ Begin Form
                 End
                 Begin CommandButton
                     OverlapFlags =85
-                    Left =12525
+                    Left =12425
                     Top =30
                     Width =1020
                     Height =290
                     TabIndex =8
-                    ForeColor =10485760
                     Name ="cmdâ{óó"
-                    Caption ="ãNàƒÅEäÈâÊèë"
+                    Caption ="ãNäÈàƒ"
                     OnClick ="[Event Procedure]"
                     GUID = Begin
                         0xb89eee84a3b6524faa242afae3d1041d
                     End
                 End
                 Begin TextBox
-                    OverlapFlags =87
+                    OverlapFlags =247
                     TextAlign =2
                     IMEMode =1
                     Left =2694
-                    Width =1276
+                    Width =1186
                     Height =313
                     FontWeight =600
                     TabIndex =9

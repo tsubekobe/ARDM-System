@@ -14,10 +14,10 @@ Begin Form
     Width =17348
     DatasheetFontHeight =9
     ItemSuffix =21
-    Left =720
-    Top =3675
-    Right =14325
-    Bottom =9780
+    Left =-45
+    Top =1635
+    Right =13890
+    Bottom =9315
     DatasheetGridlinesColor =12632256
     RecSrcDt = Begin
         0x3c36dbdaae2ae640
@@ -36,10 +36,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x003e7401f83a74017ceb7572183a7401443a7401443a74010000000065307972 ,
+        0x00ebbb7230532e025c532e025c532e02000000006530bf722c532e02439cbb72 ,
         0x010403069c00501453ef8003010009009a0b3408640001000101580202000100 ,
-        0x580203000100413400440000bb973477d43974010c3a7401103a740100000000 ,
-        0x303a7401a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400522e0224532e0228532e020000000048532e02a761bc72 ,
+        0x10542e02a01a0000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -208,7 +208,7 @@ Begin Form
     PrtDevNames = Begin
         0x08001f0036000100000000000000000000000000000000000000000000000000 ,
         0x00000000000000000000000000000000000000000000504f525450524f4d5054 ,
-        0x3a0000000000
+        0x3a000000000000000000000000000000000000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -581,9 +581,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =2
                     IMEMode =1
-                    Left =13830
+                    Left =13410
                     Top =60
-                    Width =624
+                    Width =2079
                     ColumnOrder =4
                     FontWeight =600
                     TabIndex =5
@@ -637,11 +637,9 @@ Begin Form
                     Width =720
                     Height =256
                     TabIndex =8
-                    ForeColor =10485760
                     Name ="cmdâ{óó"
                     Caption ="éfÇ¢èë"
                     OnClick ="[Event Procedure]"
-                    HyperlinkAddress ="\\\\Ts-002\\ëçñ±data\\éfÇ¢èëåüçı\\H25îNìx_PDF\\éfÇ¢èëÅ@13-1853.pdf"
                     GUID = Begin
                         0x85f7928c98a3014db1cb0c3016db2bbb
                     End
