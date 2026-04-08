@@ -52,7 +52,8 @@ Public strQry          As String
 Public strTbl          As String
 
 ' ── 既存の変数宣言に以下を追加 ──────────────────────────────────
-Public flgPwOk      As Integer   ' ★ 追加: 0=PW未認証, 1=中間管理PW認証済, 2=SYS管理PW認証済
+Public flgPwOkReg   As Integer   ' 0=未認証, 1=中間管理PW認証済, 2=SYS管理PW認証済
+Public flgPwOkEdit  As Integer   ' 0=未認証, 1=中間管理PW認証済, 2=SYS管理PW認証済
 Public strNextBangou   As String   ' 新規登録時の次番号（受付年度()から受け取る）
 
 'システム名
@@ -464,7 +465,8 @@ Public Sub 全ロック解放()
     intRtn = ログイン_DEL   ' Mdlログイン.bas の既存関数
 
     ' 3) PW認証フラグをリセット
-    flgPwOk = 0
+    flgPwOkReg = 0
+    flgPwOkEdit = 0
 
 End Sub
 

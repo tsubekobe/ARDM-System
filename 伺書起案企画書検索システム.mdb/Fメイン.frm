@@ -32,8 +32,8 @@ Begin Form
         0xca25f0e8443f7f499e04608f6b120993
     End
     NameMap = Begin
-        0x0acc0e550000000047075eca8bb7be438ab98a7308b5b1050100000010abdcb2 ,
-        0x8e83e640000000000000000046003a4ff866c560315853007500620000000000 ,
+        0x0acc0e550000000047075eca8bb7be438ab98a7308b5b105010000009971193a ,
+        0x0d85e640000000000000000046003a4ff866c560315853007500620000000000 ,
         0x0000947c41b113673548b5cb090cf7623b25000000003bb7cf9d8b3ae6400000 ,
         0x0000000000005400745ea65e0000000000006f031e22fa0c4648a5880b1b5bb0 ,
         0x70cf07000000947c41b113673548b5cb090cf7623b25745ea65e000000000000 ,
@@ -55,10 +55,10 @@ Begin Form
         0x010000006801000000000000a10700000100000001000000
     End
     PrtDevMode = Begin
-        0x00457d00b8417d007ceb0373d8407d0004417d0004417d000000000065300773 ,
+        0x00407800e83c78007cebbb72083c7800343c7800343c7800000000006530bf72 ,
         0x010403069c00501403170104020009009a0b3408640001000f00580201000100 ,
-        0x580203000100413400440000bb97e07794407d00cc407d00d0407d0000000000 ,
-        0xf0407d00a7610000000000000000000000000000010000000000000001000000 ,
+        0x580203000100413400440000bb977b77c43b7800fc3b7800003c780000000000 ,
+        0x203c7800a7610000000000000000000000000000010000000000000001000000 ,
         0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
         0x2200c80024032c113f5d7b7e0000000000000000000000000000000000000000 ,
         0x0000000000000000050000000000050001000000000000000000000000000000 ,
@@ -228,7 +228,7 @@ Begin Form
         0x080022004a000100000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000000000000000000000000000000000000000000000000 ,
         0x0000000000000000000054533030310000000000000000000000000000000000 ,
-        0x000000000000000000000000000000000000000000000000
+        0x00000000000000000000000000000000000000000000000000000000
     End
     NoSaveCTIWhenDisabled =1
     Begin
@@ -964,7 +964,7 @@ Private Sub cmd登録_Click()
     Dim dataArgs As String
 
     ' ── PW認証チェック ───────────────────
-    If Not PW認証チェック() Then Exit Sub
+    If Not PW認証チェック("REG") Then Exit Sub
 
     strBangou = ""
     strNichiji = ""
@@ -986,7 +986,7 @@ Private Sub cmd編集_Click()
     Dim dataArgs As String
 
     ' ── PW認証チェック ───────────────────
-    If Not PW認証チェック() Then Exit Sub
+    If Not PW認証チェック("EDIT") Then Exit Sub
 
     strBangou = Forms!Fメイン!情報Sub!txt番号
     strNichiji = Forms!Fメイン!情報Sub!登録日時
@@ -1483,7 +1483,7 @@ End Sub
 '
 ' 呼び出し元：cmd登録_Click、cmd編集_Click
 ' ================================================================
-Private Function PW認証チェック() As Boolean
+Private Function PW認証チェック(ByVal strAction As String) As Boolean
 
     PW認証チェック = False
 
@@ -1491,10 +1491,17 @@ Private Function PW認証チェック() As Boolean
     Dim strInput As String
     Dim strPwJimu As String
     Dim strPwSys As String
+    Dim intPwOk As Integer
 
     strBumon = Trim$(職員情報Key.所属部門)
     strPwJimu = 設定値取得("PW_JIMU", "")
     strPwSys = 設定値取得("PW_SYS", "")
+
+    If strAction = "EDIT" Then
+        intPwOk = flgPwOkEdit
+    Else
+        intPwOk = flgPwOkReg
+    End If
 
     ' 所属部門が "3" 以下（一般職員）は編集権限なし
     If strBumon <= "3" Then
@@ -1502,14 +1509,14 @@ Private Function PW認証チェック() As Boolean
         Exit Function
     End If
 
-    ' ── すでにこのセッションで認証済みならスキップ ──────
+    ' ── この操作で既に認証済みならスキップ ─────────
     If strBumon >= "6" Then
-        If flgPwOk >= 2 Then
+        If intPwOk >= 2 Then
             PW認証チェック = True
             Exit Function
         End If
     ElseIf strBumon >= "4" Then
-        If flgPwOk >= 1 Then
+        If intPwOk >= 1 Then
             PW認証チェック = True
             Exit Function
         End If
@@ -1530,7 +1537,7 @@ Private Function PW認証チェック() As Boolean
 
     If strBumon >= "6" Then
         If strInput = strPwSys Then
-            flgPwOk = 2
+            intPwOk = 2
             flgHyouji = 2
             flgSYS = 1
             PW認証チェック = True
@@ -1539,11 +1546,19 @@ Private Function PW認証チェック() As Boolean
         End If
     ElseIf strBumon >= "4" Then
         If strInput = strPwJimu Then
-            flgPwOk = 1
+            intPwOk = 1
             flgHyouji = 1
             PW認証チェック = True
         Else
             MsgBox cstMsg05, vbExclamation, cstSys
+        End If
+    End If
+
+    If PW認証チェック = True Then
+        If strAction = "EDIT" Then
+            flgPwOkEdit = intPwOk
+        Else
+            flgPwOkReg = intPwOk
         End If
     End If
 
